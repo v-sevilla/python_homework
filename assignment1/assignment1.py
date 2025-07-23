@@ -1,8 +1,8 @@
 #Task 1
-def hello_function():
+def hello():
     return "Hello!"
 
-print(hello_function())
+print(hello())
 
 #Task 2
 def greet(name):
@@ -16,56 +16,69 @@ import random
 operations_list = ["add", "subtract", "multiply", "divide", "int_divide", "modulo", "power"]
 operation = random.choice(operations_list)
 
-def calculate(a, b, operation):
-    if type(a) != int or type(b) != int:
-        return f"You can't {operation} those values!"
-    elif operation == "divide" and b == 0:
+def calc(a, b, operation="multiply"):
+    try:
+        if operation == "divide" and b == 0:
+            return f"You can't divide by 0!"
+        elif operation == "add":
+            return a+b
+        elif operation == "subtract":
+            return a-b
+        elif operation == "multiply":
+            return a*b
+        elif operation == "divide":
+            return a/b
+        elif operation == "int_divide":
+            return a//b
+        elif operation == "modulo":
+            return a%b
+        elif operation == "power":
+            return a**b
+    except ZeroDivisionError:
         return f"You can't divide by 0!"
-    elif operation == "add":
-        return a+b
-    elif operation == "subtract":
-        return a-b
-    elif operation == "multiply":
-        return a*b
-    elif operation == "divide":
-        return a/b
-    elif operation == "int_divide":
-        return a//b
-    elif operation == "modulo":
-        return a%b
-    elif operation == "power":
-        return a**b
+    except TypeError:
+        return f"You can't multiply those values!"
     
-print(calculate(5, 8, operation))
+print(calc(5, 8, operation))
 
 #Task 4
 data_types = [float, str, int]
-type = random.choice(data_types)
+data_type = random.choice(data_types)
 
-def data_type_conversion(value, type):
+def data_type_conversion(value, data_type):
     try:
-        return type(value)
-    except Exception as e:
-        print(f"You can't convert {value} into a {type}")
-
-print(data_type_conversion("nonsense", type))
+        if data_type == "float":
+            return float(value)
+        elif data_type == "str":
+            return str(value)
+        elif data_type == "int":
+            return int(value)
+       
+    except Exception:
+        return(f"You can't convert {value} into a {data_type}.")
+    
+print(data_type_conversion("nonsense", float))
 
 #Task 5
-def find_avg(*args):
-    grade = sum(args)/len(args)
+def grade(*args):
     
-    if grade >= 90:
-        return "A"
-    elif grade >= 80 and grade <= 89:
-        return "B"
-    elif grade >= 70 and grade <= 79:
-        return "C"
-    elif grade >= 60 and grade <= 69:
-        return "D"
-    else:
-        return "F"
+    try:
+        average_score = sum(args)/len(args)
+        
+        if average_score >= 90:
+            return "A"
+        elif average_score >= 80 and average_score <= 89:
+            return "B"
+        elif average_score >= 70 and average_score <= 79:
+            return "C"
+        elif average_score >= 60 and average_score <= 69:
+            return "D"
+        else:
+            return "F"
 
-print(find_avg(58, 62, 93, 74, 85))  
+    except Exception:
+       return (f"Invalid data was provided.")
+print(grade(58, 62, 93, 74, 85))  
 
 #Task 6
 def repeat(str, count):
@@ -99,8 +112,10 @@ def titleize(str):
     titleized_str = ""
 
     for i, word in enumerate(string_list):
-        if i == 0 or i == len(string_list)-1:
+        if i == 0:
             titleized_str += word.capitalize() + " "
+        elif i == len(string_list)-1:
+            titleized_str += word.capitalize()
         elif word in exception_words:
             titleized_str += word + " "
         else:
@@ -130,16 +145,25 @@ def pig_latin(str):
     split_str = str.split()
 
     for word in split_str:
-        if word[0] == "q" and word[1] == "u":
-            pig_latin_str += word[2:] + "quay" + " "
-        elif word[0] in vowels:
-            pig_latin_str += word + "ay" + " "
-        else: 
-            for i, letter in enumerate(word):
-                if letter in vowels:
-                    pig_latin_str += word[i:] + word[:i] + "ay" + " "
+        pig_latin_word = ""
+
+        if word[0] in vowels:
+            pig_latin_word = word + "ay"
+        else:
+            for i in range(len(word)):
+                if word[i] == 'q' and word[i+1] == 'u':
+                    pig_latin_word = word[i+2:] + word[:i+2] + "ay"
                     break
-            
-    return pig_latin_str
+            else:
+                for i, letter in enumerate(word):
+                    if letter in vowels:
+                        pig_latin_word = word[i:] + word[:i] + "ay"
+                        break
+                else:
+                    pig_latin_word = word
+
+        pig_latin_str += pig_latin_word + " "
+
+    return pig_latin_str.strip()
 
 print(pig_latin("the quick brown fox"))
