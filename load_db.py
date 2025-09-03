@@ -10,7 +10,7 @@ if os.path.exists(db_path):
         exit(0)
     os.remove(db_path)
 
-with sqlite3.connect("./db/lesson.db",isolation_level='IMMEDIATE') as conn:    
+with sqlite3.connect("./db/lesson.db",isolation_level='IMMEDIATE') as conn:
     conn = sqlite3.connect("./db/lesson.db",isolation_level='IMMEDIATE')
     conn.execute("PRAGMA foreign_keys = 1")
     cursor = conn.cursor()
@@ -18,7 +18,7 @@ with sqlite3.connect("./db/lesson.db",isolation_level='IMMEDIATE') as conn:
     # Create tables
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS customers (
-        customer_id INTEGER PRIMARY KEY,          
+        customer_id INTEGER PRIMARY KEY,
         customer_name TEXT,
         contact TEXT,
         street TEXT,
@@ -33,7 +33,7 @@ with sqlite3.connect("./db/lesson.db",isolation_level='IMMEDIATE') as conn:
         employee_id INTEGER PRIMARY KEY,
         first_name TEXT,
         last_name TEXT,
-        phone TEXT      
+        phone TEXT
     )
     """)
     cursor.execute("""
@@ -63,11 +63,11 @@ with sqlite3.connect("./db/lesson.db",isolation_level='IMMEDIATE') as conn:
         FOREIGN KEY(employee_id) REFERENCES employees(employee_id)
     )
     """)
- 
+
 # Create a database engine
 engine = sa.create_engine('sqlite:///db/lesson.db')
 
-tables = ["customers", "employees", 
+tables = ["customers", "employees",
           "products", "orders", "line_items"]
 
 for table in tables:
