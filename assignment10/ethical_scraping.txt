@@ -1,0 +1,8 @@
+Task 5: Ethical Web Scraping
+
+Which sections of the website are restricted for crawling?
+It looks like anything to do with VfD, XfD, adminship, and arbitration discussions discussions is restricted for crawling. In addition, they restrict specific user-agents such as MJ12bot for spam and Mediapartners-Google* for advertisements.
+
+Are there specific rules for certain user agents?
+There are some bots that are highlighted near the top of the robot.txt page that are completely blocked. This includes large amounts of spam from various bots, crawlers that Wiki would rather not have, and a list of bots known to cause issues that were designed to copy entire sites.
+There is also a section of user agents that should abide by the request rates.
