@@ -56,44 +56,87 @@ conn = sqlite3.connect("../db/lesson.db")
 conn.execute("PRAGMA foreign_keys = 1")
 cursor = conn.cursor()
 
+customer_query = """
+  SELECT customer_id
+  FROM customers
+  WHERE customer_name = 'Perez and Sons'
+  """
+employee_query = """
+  SELECT employee_id
+  FROM employees
+  WHERE first_name = 'Miranda' AND last_name = 'Harris'
+  """
+product_query = """
+  SELECT product_id
+  FROM products
+  ORDER BY price ASC
+  LIMIT 5
+  """
+
+order_id = """
+  INSERT INTO orders (customer_id, employee_id, date) VALUES (?,?,?)
+  RETURNING order_id
+"""
+
 def add_order_id(cursor, customer_id, employee_id, date):
   try:
       cursor.execute("INSERT INTO orders (customer_id, employee_id, date) VALUES (?,?,?) RETURNING order_id", (customer_id, employee_id, date))
+      results = cursor.fetchall()
+      return results[0][0]
   except Exception as e:
-    conn.rollback()
     print("Error:", e)
 
 def add_order(cursor, order_id, product_id, quantity):
   try:
       cursor.execute("INSERT INTO line_items (order_id, product_id, quantity) VALUES (?,?,?)", (order_id, product_id, quantity))
   except Exception as e:
-    conn.rollback()
     print("Error:", e)
 
-add_order_id(cursor, 16, 7, '2025-09-09')
-add_order(cursor, 250, 23, 10)
-add_order(cursor, 251, 18, 10)
-add_order(cursor, 252, 43, 10)
-add_order(cursor, 253, 9, 10)
-add_order(cursor, 254, 44, 10)
+try:
+  cursor.execute(customer_query)
+  result = cursor.fetchall()
+  for row in result:
+    print(row)
+    customer_id = result[0][0]
+  print()
 
-conn.commit()
+  cursor.execute(employee_query)
+  result = cursor.fetchall()
+  for row in result:
+    print(row)
+    employee_id = result[0][0]
+  print()
 
-query = """
-  SELECT li.line_item_id, p.product_name, li.quantity
-  FROM line_items AS li
-  JOIN products AS p
-  ON p.product_id = li.product_id
-  WHERE li.order_id = (
-    SELECT o.order_id
-    FROM orders o
-    JOIN customers c
-    ON c.customer_id = o.customer_id
-    JOIN employees e
-    ON e.employee_id = o.employee_id
-    WHERE c.customer_name = 'Perez and Sons'
-  )
-  ORDER BY li.line_item_id;
-"""
-df = pd.read_sql_query(query, conn)
-print(df)
+  cursor.execute(product_query)
+  product_results = cursor.fetchall()
+  product_ids = []
+  for row in product_results:
+    print(row)
+    product_ids.append(row[0])
+
+  order_id = add_order_id(cursor, customer_id, employee_id, '2025-09-19')
+
+  for product_id in product_ids:
+    add_order(cursor, order_id, product_id, 10)
+
+  conn.commit()
+
+  query = """
+    SELECT li.line_item_id, p.product_name, li.quantity
+    FROM line_items AS li
+    JOIN products AS p ON p.product_id = li.product_id
+    WHERE li.order_id = (
+      SELECT o.order_id
+      FROM orders o
+      JOIN customers c ON c.customer_id = o.customer_id
+      JOIN employees e ON e.employee_id = o.employee_id
+      WHERE c.customer_name = 'Perez and Sons'
+      AND e.first_name = 'Miranda' AND e.last_name = 'Harris'
+      ORDER BY o.order_id DESC
+    )
+  """
+  df = pd.read_sql_query(query, conn)
+  print(df)
+
+except Exception as e:
+    print("Error:", e)
