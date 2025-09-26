@@ -52,6 +52,8 @@ def add_publisher(cursor, publisher_id, name):
         cursor.execute("INSERT INTO Publisher (publisher_id, name) VALUES (?,?)", (publisher_id, name))
     except sqlite3.IntegrityError:
         print(f"id {publisher_id} is already in the database.")
+    except Exception as e:
+        print("Error:", e)
 
 def add_magazine(cursor, magazine_id, name, publisher_id):
     try:
@@ -70,6 +72,8 @@ def add_subscription(cursor, subscriber_id, magazine_id, name, address, expirati
         cursor.execute("INSERT INTO Subscriptions (subscriber_id, magazine_id, name, address, expiration_date) VALUES (?,?,?,?,?)", (subscriber_id, magazine_id, name, address, expiration_date))
     except sqlite3.IntegrityError:
         print(f"{name} and the same address already exists in the database.")
+    except Exception as e:
+        print("Error:", e)
 
 # Insert sample data into tables
 
@@ -92,19 +96,23 @@ print()
 #Task 4: Write SQL Queries
 
 #Write a query to retrieve all information from the subscribers table.
-cursor.execute("SELECT * FROM Subscribers")
-result = cursor.fetchall()
-for row in result:
-    print(row)
-print()
+try:
+    cursor.execute("SELECT * FROM Subscribers")
+    result = cursor.fetchall()
+    for row in result:
+        print(row)
+    print()
 
-cursor.execute("SELECT * FROM Magazines ORDER BY name ASC")
-result = cursor.fetchall()
-for row in result:
-    print(row)
-print()
+    cursor.execute("SELECT * FROM Magazines ORDER BY name ASC")
+    result = cursor.fetchall()
+    for row in result:
+        print(row)
+    print()
 
-cursor.execute("SELECT * FROM Magazines JOIN Publisher ON magazines.publisher_id = publisher.publisher_id WHERE publisher.name = 'GOOD'")
-result = cursor.fetchall()
-for row in result:
-    print(row)
+    cursor.execute("SELECT * FROM Magazines JOIN Publisher ON magazines.publisher_id = publisher.publisher_id WHERE publisher.name = 'GOOD'")
+    result = cursor.fetchall()
+    for row in result:
+        print(row)
+
+except Exception as e:
+    print("Error:", e)
