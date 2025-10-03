@@ -1,0 +1,5 @@
+I think one of the most challenging tasks this week was Task #3.
+Task #2 prepared us to complete task 3, but I think it wasn't as simple as Task 6.
+I relied on Tom's mentor session to get a better idea of how to complete this week's assignment.
+I struggled with trying to figure out how to capture multiple authors in the 3rd task. It required an extra for loop to take into account books with more than one author.
+I also found it challenging to complete the last question since we weren't using css selectors, and had to rely on xpath/tags. I tried to use the same method of copy and pasting the xpath given from inspecting the elements but I was only retrieving the first title every time. My initial attempt would keep finding the same first <strong> tag, since xpath starts at the root everytime. I learned that using a relative XPath prefix with '.' searches within the element which in this case was <a>.
