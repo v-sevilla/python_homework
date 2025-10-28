@@ -16,12 +16,10 @@ with sqlite3.connect("../db/lesson.db") as conn:
   """
   employee_results = pd.read_sql_query(query, conn)
 
-categories = employee_results["last_name"]
-revenues = employee_results["revenue"]
-plt.bar(categories, revenues, color=['green'])
-plt.title("Sales by Employee")
-plt.xlabel("Employee", fontsize=12)
-plt.ylabel("Revenue")
+ax = employee_results.plot.bar(x='last_name', y='revenue', color='green')
+
+plt.xlabel('Employee Last Name')
+plt.ylabel('Revenue')
 plt.show()
 
 #Task 3: Interactive Visualizations with Plotly
